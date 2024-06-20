@@ -8,7 +8,7 @@ const resultDisplay = document.getElementById('result-display');
 const shelf = document.getElementById('shelf');
 const grid = document.getElementById('grid');
 
-const customDice = []; // Global array to store custom dice
+let customDice = []; // Global array to store custom dice
 
 const forgeForm = document.getElementById('forge-form');
 
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (customDie) {
             customDice.push(customDie);
             alert(`Custom die ${customDie.name} added successfully!`);
+            updateCustomDiceDisplay();
         } else {
             alert('Invalid dice pattern. Please use the format: dName:[face1,face2,...]');
         }
@@ -34,6 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
     dropToShelfButton.addEventListener('click', dropAllToShelf);
     rerollAllButton.addEventListener('click', rerollAllDice);
     clearShelfButton.addEventListener('click', clearShelf);
+    const saveDiceButton = document.getElementById('save-dice-button');
+    const loadDiceButton = document.getElementById('load-dice-button');
+    saveDiceButton.addEventListener('click', saveCustomDice);
+    loadDiceButton.addEventListener('click', loadCustomDice);
 });
 
 function parseCustomDicePattern(pattern) {
@@ -224,4 +229,41 @@ function addDragAndDropHandlers(container) {
     container.addEventListener('dragstart', handleDragStart);
     container.addEventListener('dragover', handleDragOver);
     container.addEventListener('drop', handleDrop);
+}
+
+function updateCustomDiceDisplay() {
+    const customDiceContainer = document.getElementById('custom-dice-container');
+    customDiceContainer.innerHTML = ''; // Clear the current display
+
+    customDice.forEach((die, index) => {
+        const dieElement = document.createElement('div');
+        dieElement.className = 'custom-die';
+        dieElement.textContent = `d${die.name}: [${die.faces.join(', ')}]`;
+
+        // Create delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button'; // Add this line
+        deleteButton.textContent = '❌';
+        deleteButton.addEventListener('click', () => deleteCustomDie(index));
+
+        dieElement.appendChild(deleteButton);
+        customDiceContainer.appendChild(dieElement);
+    });
+}
+
+function deleteCustomDie(index) {
+    customDice.splice(index, 1); // Remove the custom die from the array
+    updateCustomDiceDisplay(); // Update the display
+    saveCustomDice(); // Save the updated custom dice to local storage
+}
+
+function saveCustomDice() {
+    localStorage.setItem('customDice', JSON.stringify(customDice));
+}
+function loadCustomDice() {
+    const savedDice = localStorage.getItem('customDice');
+    if (savedDice) {
+        customDice = JSON.parse(savedDice);
+        updateCustomDiceDisplay();
+    }
 }

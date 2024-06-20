@@ -24,4 +24,4 @@ REM Commit the changes with the appropriate message
 git commit -m "%commit_message%"
 
 REM Push the changes to the remote repository
-git push -u origin master
+git push -u origin main
