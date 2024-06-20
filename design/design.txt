@@ -1,0 +1,61 @@
+### Dice Rolling Helper Application - Developer Brief
+
+#### Overview
+This application is a dice rolling helper designed to facilitate custom dice creation, rolling, and organization on a grid. It includes functionalities for creating dice with custom faces, rolling dice using specified formulas, and organizing results on a grid for strategic planning and analysis.
+
+#### Features
+
+1. **Dice Formula Input**
+   - A text input field where users can define their dice formulas (e.g., "blue 2d6, red 1d8, dZ"). It can be parsed as follows: color, number of dice, and type of die.
+   - A roll button to execute the dice roll according to the specified formula.
+
+2. **Roll Result Display**
+   - A section that displays the result of the dice roll. Each die result is shown as an icon or number within a colored die face.
+   - Two buttons below the roll result:
+     - "Drop All to Shelf": Moves all dice results to the shelf.
+     - "Reroll All": Rerolls all dice currently in the roll result section.
+
+3. **Dice Shelf**
+   - A area where users can drag and drop dice from the roll result to lock them from rerolls.
+   - Each dice slot on the shelf can be cleared individually by an "X" button.
+   - A "Clear Shelf" button to remove all dice from the shelf.
+
+4. **Dice Forge**
+   - A section to define custom dice faces using emojis or numbers.
+   - Examples:
+     - `dA: [1,1,2,2,3,3]`
+     - `dB: [+, -]`
+     - `dZ: [👽,👽,👾,🦖,👷‍♂️,🦸‍♂️]`
+   - An input field for users to create their own dice labels with corresponding faces.
+
+5. **Dice Grid**
+   - A grid where users can drag and drop dice from the roll result or the shelf.
+   - This grid allows for organizing dice in a structured manner for further analysis or gameplay.
+
+#### User Interface Flow
+
+1. **Creating Dice**
+   - Users navigate to the Dice Forge section to create custom dice. They input faces and save the dice for future use.
+  
+2. **Rolling Dice**
+   - Users input their dice formulas in the Dice Formula input field and click the Roll Button to generate results.
+   - Results are displayed in the Roll Result section with options to move all to the shelf or reroll.
+
+3. **Organizing Dice**
+   - Users drag and drop dice from the Roll Result to the Shelf to lock them.
+   - Dice can be further organized on the Dice Grid for strategic planning.
+
+4. **Clearing and Rerolling**
+   - The Shelf can be cleared individually or entirely using the provided buttons.
+   - Dice in the Roll Result section can be rerolled with the "Reroll All" button.
+
+#### Developer Notes
+
+- Ensure drag-and-drop functionality is smooth and intuitive across all sections (Roll Result, Shelf, Dice Grid).
+- Allow custom dice to be saved and reused in future sessions.
+- Maintain a responsive design to ensure usability on various devices (desktop, tablet, mobile).
+- Provide visual feedback on actions such as rolling, dragging, dropping, and clearing dice.
+
+### Summary
+
+This dice rolling helper application aims to provide a flexible and intuitive platform for users to create, roll, and organize custom dice. The primary focus is on ease of use, visual clarity, and functional flexibility to accommodate various user needs in dice-based games or analysis scenarios.

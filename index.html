@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Rolling Helper</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-side">
+            <section id="dice-formula">
+                <h2>Dice Formula Input</h2>
+                <div class="inline-container">
+                    <input type="text" id="formula-input" placeholder="Enter dice formula (e.g., 'blue 2d6, red 1d8, dZ')">
+                    <button id="roll-button">Roll</button>
+                    <button id="add-roll-button">Add Roll</button>
+                </div>
+            </section>
+
+            <section id="roll-result">
+                <h2>Roll Result Display</h2>
+                <div id="result-display"></div>
+                <button id="drop-to-shelf">Drop All to Shelf</button>
+                <button id="reroll-all">Reroll All</button>
+            </section>
+
+            <section id="dice-shelf">
+                <h2>Dice Shelf</h2>
+                <div id="shelf"></div>
+                <button id="clear-shelf">Clear Shelf</button>
+            </section>
+
+            <section id="dice-forge">
+                <h2>Dice Forge</h2>
+                <form id="forge-form">
+                    <label for="dice-pattern">Dice Pattern:</label>
+                    <input type="text" id="dice-pattern" name="pattern" placeholder="e.g., dAB:[A,B]" required>
+                    <button type="submit">Forge Dice</button>
+                </form>
+            </section>
+        </div>
+
+        <div class="right-side">
+            <section id="dice-grid">
+                <h2>Dice Grid</h2>
+                <div id="grid"></div>
+            </section>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
