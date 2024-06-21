@@ -147,15 +147,47 @@ function displayResults(results) {
         const dieElement = document.createElement('div');
         dieElement.className = 'die';
         dieElement.style.backgroundColor = die.color;
-        dieElement.textContent = die.result;
         dieElement.draggable = true;
-        dieElement.dataset.type = die.type; // Add this line to store the type in the dataset
-        dieElement.dataset.color = die.color; // Add this line to store the color in the dataset
-        dieElement.dataset.resultIndex = die.resultIndex; // Add this line to store the resultIndex in the dataset
+        dieElement.dataset.type = die.type;
+        dieElement.dataset.color = die.color;
+        dieElement.dataset.resultIndex = die.resultIndex;
         dieElement.addEventListener('dragstart', handleDragStart);
         resultDisplay.appendChild(dieElement);
+
+        // Simulate dice roll animation
+        const faces = getDieFaces(die.type);
+        let rollCount = 0;
+        const maxRolls = 10; // Number of times to change the face
+        const rollInterval = setInterval(() => {
+            const randomFace = faces[Math.floor(Math.random() * faces.length)];
+            dieElement.textContent = randomFace;
+            rollCount++;
+            if (rollCount >= maxRolls) {
+                clearInterval(rollInterval);
+                dieElement.textContent = die.result; // Settle on the final result
+            }
+        }, 100); // Change face every 100ms
     });
     sortResultDisplay();
+}
+
+function getDieFaces(type) {
+    // Check if the die type is a custom die
+    const customDie = customDice.find(d => d.name === type);
+    if (customDie) {
+        return customDie.faces;
+    } else if (/^\d+$/.test(type)) { // Check if type is a number
+        const max = parseInt(type, 10);
+        return Array.from({ length: max }, (_, i) => i + 1);
+    } else {
+        switch (type) {
+            case 'Z':
+                return ['🧠','🧠','🧠','💥','🏃','🏃'];
+            // Add more cases for other non-numeric dice types
+            default:
+                return [1, 2, 3, 4, 5, 6]; // Default to d6 if type is unknown
+        }
+    }
 }
 
 function dropAllToShelf() {
