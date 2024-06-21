@@ -15,7 +15,7 @@ REM Check if a commit message was provided as an argument
 if "%1"=="" (
     REM Get the current date
     for /f "tokens=2 delims==" %%i in ('wmic os get localdatetime /value') do set datetime=%%i
-    set commit_message=Commit on %datetime:~0,4%-%datetime:~4,2%-%datetime:~6,2%
+    set commit_message=Commit on %datetime:~0,4%-%datetime:~4,2%-%datetime:~6,2% %datetime:~8,2%:%datetime:~10,2%:%datetime:~12,2%
 ) else (
     set commit_message=%1
 )

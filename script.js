@@ -7,6 +7,7 @@ const formulaInput = document.getElementById('formula-input');
 const resultDisplay = document.getElementById('result-display');
 const shelf = document.getElementById('shelf');
 const grid = document.getElementById('grid');
+const addFormulaButton = document.getElementById('add-formula-button');
 
 let customDice = []; // Global array to store custom dice
 
@@ -39,7 +40,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadDiceButton = document.getElementById('load-dice-button');
     saveDiceButton.addEventListener('click', saveCustomDice);
     loadDiceButton.addEventListener('click', loadCustomDice);
+
+    addFormulaButton.addEventListener('click', addFormula);
+    const refillRollButton = document.getElementById('refill-roll-button');
+    refillRollButton.addEventListener('click', refillRoll);
 });
+
+function addFormula() {
+    const formula = formulaInput.value.trim();
+    if (formula) {
+        const formulaContainer = document.createElement('div');
+        formulaContainer.className = 'formula-item';
+        formulaContainer.textContent = formula;
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button';
+        deleteButton.textContent = '❌';
+        deleteButton.addEventListener('click', () => {
+            formulaContainer.remove();
+        });
+
+        formulaContainer.appendChild(deleteButton);
+
+        // Add click event to fill formulaInput
+        formulaContainer.addEventListener('click', () => {
+            formulaInput.value = formula;
+        });
+
+        // Append to the new container below inline-container
+        const formulaListContainer = document.getElementById('formula-list-container');
+        formulaListContainer.appendChild(formulaContainer);
+    } else {
+        alert('Please enter a formula.');
+    }
+}
 
 function parseCustomDicePattern(pattern) {
     const match = pattern.match(/^d(\w+):\[(.+)\]$/);
@@ -62,13 +96,6 @@ function rollDice(addToCurrent) {
         resultDisplay.innerHTML = ''; // Clear current results if not adding to current roll
     }
 
-    results.sort((a, b) => {
-        if (a.type !== b.type) {
-            return a.type.localeCompare(b.type);
-        } else {
-            return a.resultIndex - b.resultIndex;
-        }
-    });
     displayResults(results);
 }
 
@@ -124,9 +151,11 @@ function displayResults(results) {
         dieElement.draggable = true;
         dieElement.dataset.type = die.type; // Add this line to store the type in the dataset
         dieElement.dataset.color = die.color; // Add this line to store the color in the dataset
+        dieElement.dataset.resultIndex = die.resultIndex; // Add this line to store the resultIndex in the dataset
         dieElement.addEventListener('dragstart', handleDragStart);
         resultDisplay.appendChild(dieElement);
     });
+    sortResultDisplay();
 }
 
 function dropAllToShelf() {
@@ -141,21 +170,15 @@ function rerollAllDice() {
     const results = dice.map(die => {
         const newResult = rollSingleDie({ type: die.dataset.type, color: die.dataset.color });
         die.textContent = newResult.result;
+        die.dataset.resultIndex = newResult.resultIndex; // Preserve resultIndex
         return { ...newResult, element: die };
-    });
-
-    results.sort((a, b) => {
-        if (a.type !== b.type) {
-            return a.type.localeCompare(b.type);
-        } else {
-            return a.resultIndex - b.resultIndex;
-        }
     });
 
     resultDisplay.innerHTML = ''; // Clear current results
     results.forEach(result => {
         resultDisplay.appendChild(result.element);
     });
+    sortResultDisplay();
 }
 
 function clearShelf() {
@@ -267,4 +290,54 @@ function loadCustomDice() {
         customDice = JSON.parse(savedDice);
         updateCustomDiceDisplay();
     }
+}
+
+function refillRoll() {
+    const formulaInput = document.getElementById('formula-input').value.trim();
+    const diceInFormula = parseDiceFormula(formulaInput);
+    console.log(diceInFormula);
+    const diceInDisplay = Array.from(resultDisplay.children).map(die => ({
+        type: die.dataset.type,
+        color: die.dataset.color
+    }));
+
+    const diceCountMap = new Map();
+
+    diceInFormula.forEach(die => {
+        const key = `${die.type}-${die.color}`;
+        if (!diceCountMap.has(key)) {
+            const matchingDice = diceInDisplay.filter(d => d.type === die.type && d.color === die.color);
+            const countDifference = diceInFormula.filter(d => d.type === die.type && d.color === die.color).length - matchingDice.length;
+            diceCountMap.set(key, countDifference);
+            console.log(key, countDifference);
+        }
+    });
+
+    const diceToAdd = [];
+
+    diceCountMap.forEach((countDifference, key) => {
+        const [type, color] = key.split('-');
+        for (let i = 0; i < countDifference; i++) {
+            diceToAdd.push({ type, color });
+        }
+    });
+
+    const results = diceToAdd.map(rollSingleDie);
+    displayResults(results);
+}
+
+function sortResultDisplay() {
+    const dice = Array.from(resultDisplay.children);
+    dice.sort((a, b) => {
+        if (a.dataset.type !== b.dataset.type) {
+            return a.dataset.type.localeCompare(b.dataset.type);
+        } else if (a.dataset.color !== b.dataset.color) {
+            return a.dataset.color.localeCompare(b.dataset.color);
+        } else {
+            return a.dataset.resultIndex - b.dataset.resultIndex;
+        }
+    });
+
+    resultDisplay.innerHTML = '';
+    dice.forEach(die => resultDisplay.appendChild(die));
 }

@@ -11,7 +11,7 @@ body, html {
 .container {
     display: flex;
     height: 100%;
-
+    flex-wrap: wrap; /* Allow wrapping when content overflows */
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -21,7 +21,9 @@ body, html {
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-width: min-content; /* Dynamically compute the minimum width based on content */
 }
+
 .left-side{
     max-width: 30%;
 }
@@ -108,4 +110,10 @@ h2 {
 
 .delete-button {
     float: right;
+}
+
+.formula-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
