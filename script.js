@@ -76,7 +76,7 @@ function parseDiceFormula(formula) {
     const dice = [];
     const parts = formula.split(',');
     parts.forEach(part => {
-        const match = part.trim().match(/(\b\w+\b)?\s*(\d*)d(\w+)/);
+        const match = part.trim().match(/(#(?:[0-9a-fA-F]{3}){1,2}|\b\w+\b)?\s*(\d*)d(\w+)/);
         if (match) {
             const color = match[1] ? match[1].trim() : 'white'; // Default color to 'white'
             const count = parseInt(match[2], 10) || 1;
@@ -118,7 +118,8 @@ function rollSingleDie(die) {
 function displayResults(results) {
     results.forEach(die => {
         const dieElement = document.createElement('div');
-        dieElement.className = `die ${die.color}`;
+        dieElement.className = 'die';
+        dieElement.style.backgroundColor = die.color;
         dieElement.textContent = die.result;
         dieElement.draggable = true;
         dieElement.dataset.type = die.type; // Add this line to store the type in the dataset
